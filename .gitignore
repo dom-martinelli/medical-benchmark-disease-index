@@ -1,0 +1,26 @@
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Full/raw benchmark data and generated checkpoints stay local.
+data/*
+!data/explorer_coded.parquet
+!data/explorer_items.parquet
+
+# Generated logs, exports, and local model output.
+*.log
+run_log.md
+review/
+space_repo/
+*.csv
+*.xlsx
+
+# The public browser demo is published from docs/demo.
+static_space/
+
+# Local manuscript/deck build receipts.
+.codex-build/
+output/

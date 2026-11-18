@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Reproducible tutorial and live demo for the medical benchmark disease index.">
+  <title>Medical benchmark disease index · Tutorial</title>
+  <style>
+    :root {
+      --ink:#102a33; --muted:#5a6f77; --teal:#0f6d79; --teal-dark:#0a4953;
+      --mint:#dff2ed; --paper:#fbfdfc; --sand:#f3eee4; --line:#d5e3e3;
+      --coral:#d9694b; --navy:#183e58; --shadow:0 16px 44px rgba(19,61,67,.10);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:linear-gradient(180deg,#edf7f5 0,#f7faf9 620px,#fff 100%); font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--teal); text-underline-offset:3px; }
+    code,pre { font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .shell { width:min(1180px,calc(100% - 32px)); margin:auto; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; padding:22px 0; gap:18px; }
+    .brand { display:flex; align-items:center; gap:11px; color:var(--ink); font-weight:800; text-decoration:none; }
+    .mark { display:grid; place-items:center; width:38px; height:38px; color:white; background:var(--teal); border-radius:12px; box-shadow:0 8px 20px #0f6d7936; }
+    nav { display:flex; gap:18px; flex-wrap:wrap; }
+    nav a { color:var(--muted); font-weight:650; text-decoration:none; }
+    .hero { display:grid; grid-template-columns:1.2fr .8fr; gap:46px; align-items:center; padding:70px 0 92px; }
+    .eyebrow { margin:0 0 14px; color:var(--teal); font-weight:850; letter-spacing:.11em; text-transform:uppercase; font-size:.78rem; }
+    h1 { max-width:850px; margin:0; font:800 clamp(2.65rem,6vw,5.6rem)/.99 Georgia,"Times New Roman",serif; letter-spacing:-.045em; }
+    .lede { max-width:700px; margin:25px 0 0; color:#39545d; font-size:1.17rem; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+    .button { display:inline-flex; align-items:center; gap:8px; min-height:48px; padding:11px 18px; border:1px solid var(--teal); border-radius:999px; font-weight:800; text-decoration:none; }
+    .button.primary { color:white; background:var(--teal); box-shadow:0 10px 26px #0f6d7930; }
+    .button.secondary { color:var(--teal); background:#ffffffb8; }
+    .hero-card { position:relative; padding:26px; background:#103e48; color:white; border-radius:28px; box-shadow:var(--shadow); overflow:hidden; }
+    .hero-card:before { content:""; position:absolute; inset:auto -70px -110px auto; width:260px; height:260px; border-radius:50%; background:#26a5a64a; }
+    .hero-card h2 { margin:0 0 18px; font-size:1.12rem; }
+    .metric { display:grid; grid-template-columns:112px 1fr; gap:13px; align-items:baseline; padding:14px 0; border-top:1px solid #ffffff25; }
+    .metric strong { font:750 2rem/1 Georgia,serif; }
+    .metric span { color:#d5e8e9; }
+    section { padding:78px 0; }
+    .section-head { display:grid; grid-template-columns:.7fr 1.3fr; gap:48px; align-items:end; margin-bottom:35px; }
+    h2 { margin:0; font:750 clamp(2rem,4vw,3.5rem)/1.05 Georgia,serif; letter-spacing:-.025em; }
+    .section-head p { margin:0; color:var(--muted); font-size:1.08rem; }
+    .quick-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .quick { display:flex; min-height:190px; flex-direction:column; justify-content:space-between; padding:24px; color:var(--ink); background:white; border:1px solid var(--line); border-radius:20px; text-decoration:none; box-shadow:0 8px 28px #153f450b; transition:.18s ease; }
+    .quick:hover { transform:translateY(-3px); border-color:#91bcba; box-shadow:var(--shadow); }
+    .quick .tag { color:var(--teal); font-weight:850; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase; }
+    .quick h3 { margin:18px 0 8px; font-size:1.23rem; }
+    .quick p { margin:0; color:var(--muted); }
+    .arrow { align-self:flex-end; color:var(--coral); font-size:1.5rem; }
+    .walkthrough { display:grid; gap:52px; }
+    .step { display:grid; grid-template-columns:340px minmax(0,1fr); gap:34px; align-items:start; min-width:0; }
+    .step-copy { position:sticky; top:20px; min-width:0; padding:25px; background:var(--sand); border-radius:20px; }
+    .step-no { display:grid; place-items:center; width:38px; height:38px; color:white; background:var(--coral); border-radius:50%; font-weight:850; }
+    .step h3 { margin:18px 0 10px; font-size:1.45rem; }
+    .step p { color:#425a61; }
+    .step ul { padding-left:20px; }
+    .shot { min-width:0; margin:0; padding:11px; background:white; border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); }
+    .shot img { display:block; width:100%; border-radius:12px; }
+    .shot figcaption { padding:11px 8px 4px; color:var(--muted); font-size:.88rem; }
+    .codebox { position:relative; margin:18px 0; color:#eaf3f3; background:#102f39; border-radius:15px; overflow:hidden; }
+    pre { margin:0; padding:20px; overflow:auto; font-size:.88rem; line-height:1.6; }
+    .copy { position:absolute; top:10px; right:10px; padding:7px 10px; color:#dff5f3; background:#ffffff18; border:1px solid #ffffff25; border-radius:8px; cursor:pointer; }
+    .definition { padding:20px 22px; border-left:5px solid var(--teal); background:var(--mint); border-radius:5px 16px 16px 5px; }
+    .definition strong { color:var(--teal-dark); }
+    .role-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .role-card { display:flex; flex-direction:column; padding:24px; color:var(--ink); background:white; border:1px solid var(--line); border-radius:20px; text-decoration:none; box-shadow:0 8px 28px #153f450b; }
+    .role-card:hover { border-color:#91bcba; box-shadow:var(--shadow); }
+    .role-card code { align-self:flex-start; padding:3px 9px; color:var(--teal-dark); background:var(--mint); border-radius:999px; font-weight:800; }
+    .role-card h3 { margin:15px 0 7px; }
+    .role-card p { margin:0; color:var(--muted); }
+    .role-card .example { margin-top:auto; padding-top:16px; color:var(--teal); font-weight:750; }
+    .run-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:22px; }
+    .run-card { min-width:0; padding:25px; border:1px solid var(--line); border-radius:20px; background:white; }
+    .run-card h3 { margin-top:0; }
+    .warning { padding:14px 16px; color:#6b4517; background:#fff3d7; border:1px solid #eacb83; border-radius:12px; }
+    .sources { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    footer { padding:40px 0 60px; color:var(--muted); border-top:1px solid var(--line); }
+    @media (max-width:850px) {
+      .hero,.section-head,.step,.role-grid,.run-grid,.sources { grid-template-columns:minmax(0,1fr); }
+      .hero { padding-top:35px; }
+      .quick-grid { grid-template-columns:1fr; }
+      .step-copy { position:static; }
+      nav { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#top"><span class="mark">⌁</span><span>Benchmark Disease Index</span></a>
+    <nav aria-label="Primary">
+      <a href="#walkthrough">Walkthrough</a>
+      <a href="#roles">Role examples</a>
+      <a href="#healthbench">HealthBench IDs</a>
+      <a href="#run">Run it</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="shell hero">
+      <div>
+        <p class="eyebrow">Reproducible tutorial + live demo</p>
+        <h1>See which diseases medical benchmarks actually cover.</h1>
+        <p class="lede">Search benchmark items by condition, ICD-10-CM code, benchmark, and the role a condition plays. Inspect expected answers and distractors, then reproduce the same workflow locally from the scripts.</p>
+        <div class="actions">
+          <a class="button primary" href="demo/">Open the live demo →</a>
+          <a class="button secondary" href="https://github.com/dom-martinelli/medical-benchmark-disease-index">View scripts on GitHub</a>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Current index summary">
+        <h2>Current indexed collection</h2>
+        <div class="metric"><strong>14,088</strong><span>benchmark items</span></div>
+        <div class="metric"><strong>10</strong><span>public medical benchmark sources</span></div>
+        <div class="metric"><strong>4</strong><span>condition roles: tested, context, ruled out, wrong option</span></div>
+      </aside>
+    </div>
+
+    <section class="shell" aria-labelledby="try-heading">
+      <div class="section-head">
+        <h2 id="try-heading">Try a prepared query.</h2>
+        <p>Each link opens the static explorer with the filters already applied. The demo runs entirely in the browser, so no installation is needed.</p>
+      </div>
+      <div class="quick-grid">
+        <a class="quick" href="demo/?q=Q96&role=tested&focus=results">
+          <div><span class="tag">Growth-related example</span><h3>Turner syndrome · Q96</h3><p>Show questions where Turner syndrome knowledge is needed to answer.</p></div><span class="arrow">↗</span>
+        </a>
+        <a class="quick" href="demo/?q=K90.0&expand=answers&focus=results">
+          <div><span class="tag">Answer inspection</span><h3>Celiac disease · K90.0</h3><p>Open expected answers, all choices, and wrong-option annotations.</p></div><span class="arrow">↗</span>
+        </a>
+        <a class="quick" href="demo/?q=K90.0&source=HealthBench&focus=results">
+          <div><span class="tag">Source lookup</span><h3>HealthBench · K90.0</h3><p>See public item IDs, then resolve a selected ID to the pinned source row.</p></div><span class="arrow">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="shell" id="walkthrough" aria-labelledby="walk-heading">
+      <div class="section-head">
+        <h2 id="walk-heading">Screenshot walkthrough.</h2>
+        <p>This is the same sequence you can use for a scrolling tutorial or a short screen-recorded demo.</p>
+      </div>
+      <div class="walkthrough">
+        <article class="step">
+          <div class="step-copy"><span class="step-no">1</span><h3>Start with an ICD code</h3><p>Open the explorer and type <code>Q96</code> for Turner syndrome or <code>K90.0</code> for celiac disease. The search matches both model-assigned condition names and mapped ICD-10-CM codes.</p><a href="demo/?q=Q96&focus=results">Run Q96 →</a></div>
+          <figure class="shot"><img src="assets/01-home.png" alt="Medical benchmark disease index home screen with condition and code search filters"><figcaption>The opening explorer screen and its five filters.</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-copy"><span class="step-no">2</span><h3>Choose what “relevant” means</h3><p>Select <strong>tested</strong> when you want items where condition knowledge is needed to answer. Use context, ruled out, or wrong option for the other roles.</p><div class="definition"><strong>“Tested” does not mean validated.</strong><br>It means the condition is what the question asks the solver to recognize, distinguish, or manage.</div></div>
+          <figure class="shot"><img src="assets/02-tested-filter.png" alt="Explorer filtered to condition role tested"><figcaption>The role filter narrows the result to condition-relevant questions.</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-copy"><span class="step-no">3</span><h3>Inspect every answer option</h3><p>Expand an item to see the expected answer and every available option. Non-answer choices are marked incorrect; an orange label identifies a condition represented by a wrong option.</p><a href="demo/?q=K90.0&expand=answers&focus=results">Open an answer example →</a></div>
+          <figure class="shot"><img src="assets/03-answer-options.png" alt="Answer options with expected and incorrect answer highlighting"><figcaption>Expected answer, incorrect options, and wrong-option condition labels.</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-copy"><span class="step-no">4</span><h3>Use a growth-related example</h3><p>The prepared <code>Q96</code> query returns 10 items assigned the tested role in this index snapshot. The query is useful for demonstrating syndrome-level coverage tied to growth and development.</p><a href="demo/?q=Q96&role=tested&focus=results">Open the Q96 view →</a></div>
+          <figure class="shot"><img src="assets/04-turner-growth.png" alt="Turner syndrome Q96 results in the explorer"><figcaption>Turner syndrome results filtered to the tested role.</figcaption></figure>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell" id="roles" aria-labelledby="roles-heading">
+      <div class="section-head">
+        <h2 id="roles-heading">Four roles, four real items.</h2>
+        <p>Open one item for each role and inspect the question and choices. These labels were assigned by an AI model and were not adjudicated by a clinician; the cards illustrate the intended use of each category.</p>
+      </div>
+      <div class="role-grid">
+        <a class="role-card" href="demo/?q=Q96&amp;role=tested&amp;item=medmcqa-656a2cf2a35c70ab&amp;expand=question&amp;focus=results"><code>tested</code><h3>Turner syndrome · Q96</h3><p>Condition knowledge is needed to recognize the syndrome and expected karyotype.</p><span class="example">Open the single item →</span></a>
+        <a class="role-card" href="demo/?q=I10&amp;role=context&amp;item=medqa-017e7169b2608544&amp;expand=question&amp;focus=results"><code>context</code><h3>Hypertension · I10</h3><p>Hypertension is in the history, but the question asks about antiplatelet treatment after PCI.</p><span class="example">Open the single item →</span></a>
+        <a class="role-card" href="demo/?q=I26&amp;role=ruled_out&amp;item=medqa-2be470a615e3789a&amp;expand=answers&amp;focus=results"><code>ruled_out</code><h3>Pulmonary embolism · I26</h3><p>The item distinguishes pulmonary embolism from the expected postoperative diagnosis, atelectasis.</p><span class="example">Compare the choices →</span></a>
+        <a class="role-card" href="demo/?q=E87.6&amp;role=wrong_option&amp;item=medmcqa-45434ca56d9cd260&amp;expand=answers&amp;focus=results"><code>wrong_option</code><h3>Hypokalemia · E87.6</h3><p>Hypokalemia is incorrect option D. The explorer highlights the expected choice and tags the indexed distractor.</p><span class="example">See the highlighted option →</span></a>
+      </div>
+    </section>
+
+    <section class="shell" id="healthbench" aria-labelledby="hb-heading">
+      <div class="section-head">
+        <h2 id="hb-heading">How to locate a HealthBench source item.</h2>
+        <p>The public explorer intentionally shows HealthBench IDs and derived labels, but withholds the conversation text. The resolver maps the displayed hash to the original prompt ID and pinned source row.</p>
+      </div>
+      <div class="step">
+        <div class="step-copy">
+          <span class="step-no">1</span>
+          <h3>Copy the displayed item ID</h3>
+          <p>For example: <code>healthbench-68ebc53be307db72</code>.</p>
+          <div class="codebox"><button class="copy" type="button">Copy</button><pre>python3 scripts/resolve_healthbench_item.py \
+  healthbench-68ebc53be307db72</pre></div>
+          <p>The command prints the original <code>prompt_id</code>, 1-based source row, pinned revision, raw source URL, and viewer link. Add <code>--show-text</code> only for local inspection; do not copy that output into the public explorer.</p>
+        </div>
+        <figure class="shot"><img src="assets/05-healthbench-ids.png" alt="HealthBench filtered results showing public item IDs and withheld question text"><figcaption>HealthBench results remain traceable without republishing the source conversation.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="shell" id="run" aria-labelledby="run-heading">
+      <div class="section-head">
+        <h2 id="run-heading">Run it yourself.</h2>
+        <p>The repository includes the browser demo, redacted explorer data, Python app, source resolver, pipeline stages, prompts, and tests.</p>
+      </div>
+      <div class="run-grid">
+        <article class="run-card">
+          <h3>Run the prepared explorer locally</h3>
+          <div class="codebox"><button class="copy" type="button">Copy</button><pre>git clone https://github.com/dom-martinelli/medical-benchmark-disease-index.git
+cd medical-benchmark-disease-index
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python app.py</pre></div>
+          <p>The included explorer Parquet files are redacted. HealthBench text is withheld in both the local app and the public demo.</p>
+        </article>
+        <article class="run-card">
+          <h3>Rebuild the index from source</h3>
+          <div class="codebox"><button class="copy" type="button">Copy</button><pre>python run.py
+# Review data/pilot_labels.md, then explicitly approve:
+python run.py --approve-pilot</pre></div>
+          <p class="warning"><strong>Approval gate:</strong> the first command labels a 50-item pilot and stops. The full labeling pass does not begin until the second command is run.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell" aria-labelledby="limits-heading">
+      <div class="section-head"><h2 id="limits-heading">What the index does and does not claim.</h2><p>All condition, role, and code labels were assigned by an AI model. They were not reviewed by a clinician. This release is an item-level coverage index, not a benchmark of model performance.</p></div>
+      <div class="sources">
+        <div class="definition"><strong>Included:</strong> question-level and sometimes answer-option-level condition roles, ICD-10-CM and CCSR mappings, expected answers where the source provides them, answer options, and public-safe source traceability.</div>
+        <div class="definition"><strong>Not included:</strong> model scoring, claims of clinical validation, or public redistribution of HealthBench conversation text. A zero-result query means no indexed match was found; it is not proof that no subtle semantic relation exists.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell">Medical benchmark disease index · Public tutorial and reproducibility demo · <a href="https://huggingface.co/spaces/dmartinelli/medical-benchmark-disease-index">Gradio Space</a></div></footer>
+
+  <script>
+    for (const button of document.querySelectorAll('.copy')) {
+      button.addEventListener('click', async () => {
+        const text = button.nextElementSibling.textContent;
+        await navigator.clipboard.writeText(text);
+        const old = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(() => button.textContent = old, 1200);
+      });
+    }
+  </script>
+</body>
+</html>

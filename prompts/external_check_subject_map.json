@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "frozen": "2026-09-14, written before any MedMCQA code was compared against subject labels",
+  "purpose": "Expected ICD-10-CM code ranges for MedMCQA subject labels. A tested condition 'agrees' with its item's subject when its code falls in a range. Ranges are inclusive prefixes on the undotted code (e.g. K00-K14 covers K00 through K14.x).",
+  "strict_means": "the subject's own body system",
+  "lenient_means": "strict plus conditions a textbook in that subject routinely covers although ICD files them elsewhere",
+  "subjects": {
+    "Dental": {
+      "strict": ["K00-K14", "M26-M27"],
+      "lenient_adds": ["Q35-Q38", "C00-C08", "D10-D11", "B37", "S02"]
+    },
+    "Gynaecology & Obstetrics": {
+      "strict": ["O00-O9A", "N70-N98", "C51-C58", "D25-D28", "Z30-Z39"],
+      "lenient_adds": ["P00-P96", "Q50-Q56", "E28", "N60-N65", "C50"]
+    },
+    "Microbiology": {
+      "strict": ["A00-B99"],
+      "lenient_adds": ["J09-J18", "G00-G05", "N39", "U07", "K75"]
+    },
+    "Forensic Medicine": {
+      "strict": ["S00-T88", "V00-Y99"],
+      "lenient_adds": ["F10-F19", "R99", "Z04"]
+    },
+    "Ophthalmology": {
+      "strict": ["H00-H59"],
+      "lenient_adds": ["A71", "B30", "E50", "Q10-Q15", "C69", "S05"]
+    },
+    "ENT": {
+      "strict": ["H60-H95", "J30-J39"],
+      "lenient_adds": ["J00-J06", "C09-C14", "C30-C32", "Q16-Q18", "R49", "D10-D11"]
+    },
+    "Orthopaedics": {
+      "strict": ["M00-M25", "M40-M99", "Q65-Q79"],
+      "lenient_adds": ["S00-T14", "C40-C41", "D16", "A18", "E55"]
+    },
+    "Skin": {
+      "strict": ["L00-L99"],
+      "lenient_adds": ["A30", "A50-A64", "B00-B09", "B35-B49", "B85-B89", "C43-C44", "D22-D23", "Q80-Q84"]
+    },
+    "Psychiatry": {
+      "strict": ["F01-F99"],
+      "lenient_adds": ["G30-G31", "X71-X83", "R41"]
+    }
+  },
+  "pediatrics_enrichment": {
+    "subject": "Pediatrics",
+    "codes": ["P00-P96", "Q00-Q99"],
+    "comparison_subjects": ["Medicine", "Surgery"]
+  },
+  "basic_science_check": {
+    "basic_subjects": ["Anatomy", "Physiology", "Biochemistry"],
+    "clinical_subjects": ["Medicine", "Surgery", "Pediatrics", "Gynaecology & Obstetrics", "Ophthalmology", "ENT", "Orthopaedics", "Skin", "Psychiatry"]
+  }
+}
