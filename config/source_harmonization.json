@@ -1,0 +1,101 @@
+{
+  "MedQA": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MedMCQA": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "PubMedQA": {
+    "clinical_task": "biomedical question answering",
+    "care_setting": "research literature",
+    "user_role": "researcher",
+    "response_format": "three-way classification",
+    "evaluation_method": "accuracy",
+    "reference_standard": "expert annotation",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MMLU anatomy": {
+    "clinical_task": "medical knowledge",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MMLU clinical knowledge": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MMLU college medicine": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MMLU medical genetics": {
+    "clinical_task": "medical genetics knowledge",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MMLU professional medicine": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "MedBullets": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "examination",
+    "user_role": "student or trainee",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source-level rule"
+  },
+  "HealthBench": {
+    "clinical_task": "clinical response quality and safety",
+    "care_setting": "mixed health conversation",
+    "user_role": "mixed",
+    "response_format": "free text",
+    "evaluation_method": "rubric-based judge scoring",
+    "reference_standard": "benchmark rubric",
+    "harmonization_provenance": "source-level rule"
+  },
+  "LiveClin": {
+    "clinical_task": "clinical reasoning",
+    "care_setting": "longitudinal clinical case",
+    "user_role": "clinician",
+    "response_format": "multiple choice",
+    "evaluation_method": "accuracy and case accuracy",
+    "reference_standard": "benchmark answer key",
+    "harmonization_provenance": "source field plus deterministic stage rule"
+  }
+}

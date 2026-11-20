@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "last_verified": "2026-11-20",
+  "benchmarks": [
+    {
+      "benchmark_id": "medqa",
+      "benchmark_name": "MedQA",
+      "family": "exam benchmark",
+      "item_count": 2545,
+      "ingestion_status": "indexed",
+      "access": "public",
+      "native_code_system": "none",
+      "code_provenance": "AI-assigned condition; deterministic ICD-10-CM lookup",
+      "score_availability": "answer key available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/bigbio/med_qa"
+    },
+    {
+      "benchmark_id": "medmcqa",
+      "benchmark_name": "MedMCQA",
+      "family": "exam benchmark",
+      "item_count": 4183,
+      "ingestion_status": "indexed",
+      "access": "public",
+      "native_code_system": "none",
+      "code_provenance": "AI-assigned condition; deterministic ICD-10-CM lookup",
+      "score_availability": "answer key available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/openlifescienceai/medmcqa"
+    },
+    {
+      "benchmark_id": "pubmedqa",
+      "benchmark_name": "PubMedQA",
+      "family": "biomedical literature QA",
+      "item_count": 1000,
+      "ingestion_status": "indexed",
+      "access": "public",
+      "native_code_system": "none",
+      "code_provenance": "AI-assigned condition; deterministic ICD-10-CM lookup",
+      "score_availability": "reference label available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/qiaojin/PubMedQA"
+    },
+    {
+      "benchmark_id": "mmlu-medical",
+      "benchmark_name": "MMLU medical subjects",
+      "family": "exam benchmark",
+      "item_count": 1052,
+      "ingestion_status": "indexed",
+      "access": "public",
+      "native_code_system": "none",
+      "code_provenance": "AI-assigned condition; deterministic ICD-10-CM lookup",
+      "score_availability": "answer key available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/cais/mmlu"
+    },
+    {
+      "benchmark_id": "medbullets",
+      "benchmark_name": "MedBullets",
+      "family": "exam benchmark",
+      "item_count": 308,
+      "ingestion_status": "indexed with text withheld",
+      "access": "public mirror; redistribution license unclear",
+      "native_code_system": "none",
+      "code_provenance": "AI-assigned condition; deterministic ICD-10-CM lookup",
+      "score_availability": "answer key available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/mkieffer/Medbullets"
+    },
+    {
+      "benchmark_id": "healthbench",
+      "benchmark_name": "HealthBench",
+      "family": "clinical response quality and safety",
+      "item_count": 5000,
+      "ingestion_status": "indexed with text withheld",
+      "access": "public; examples not republished",
+      "native_code_system": "none",
+      "code_provenance": "AI-assigned condition; deterministic ICD-10-CM lookup",
+      "score_availability": "rubric available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/openai/healthbench"
+    },
+    {
+      "benchmark_id": "liveclin-2025-h1",
+      "benchmark_name": "LiveClin 2025 H1",
+      "family": "longitudinal clinical case MCQ",
+      "item_count": 6605,
+      "ingestion_status": "indexed",
+      "access": "public, CC BY-NC-SA 4.0",
+      "native_code_system": "ICD-10",
+      "code_provenance": "native case-level ICD-10 field",
+      "score_availability": "answer key available; no linked model-result rows",
+      "source_url": "https://huggingface.co/datasets/AQ-MedAI/LiveClin",
+      "dataset_revision": "9f3199a3e76a7e86eb935d9d82ab1c589bb4da58"
+    },
+    {
+      "benchmark_id": "medhelm-mimiciv-billing",
+      "benchmark_name": "MedHELM MIMIC-IV Billing Code",
+      "family": "EHR coding",
+      "item_count": 1000,
+      "ingestion_status": "candidate; item-ID and results audit required",
+      "access": "credentialed MIMIC-derived data",
+      "native_code_system": "ICD-10",
+      "code_provenance": "native billing labels",
+      "score_availability": "official result files exist; per-instance linkability not yet verified",
+      "source_url": "https://medhelm.org/medhelm"
+    },
+    {
+      "benchmark_id": "mimic-iv-ext-cds",
+      "benchmark_name": "MIMIC-IV-Ext CDS",
+      "family": "clinical decision support",
+      "item_count": 9149,
+      "ingestion_status": "candidate; credentialed import required",
+      "access": "PhysioNet credentialed access and DUA",
+      "native_code_system": "ICD-9 or ICD-10 as recorded",
+      "code_provenance": "native encounter diagnosis",
+      "score_availability": "answer/reference fields available after authorized access; no linked results",
+      "source_url": "https://physionet.org/content/mimic-iv-ext-cds/1.0.2/"
+    },
+    {
+      "benchmark_id": "mimic-iv-ext-medicalbench",
+      "benchmark_name": "MIMIC-IV-Ext MedicalBench",
+      "family": "medical concept verification and evidence grounding",
+      "item_count": 405,
+      "ingestion_status": "candidate; credentialed import required",
+      "access": "PhysioNet credentialed access and DUA",
+      "native_code_system": "ICD-10",
+      "code_provenance": "human-verified source codes and benchmark annotations",
+      "score_availability": "gold labels and evidence spans available after authorized access; no linked results",
+      "source_url": "https://physionet.org/content/mimic-iv-ext-medicalbench/1.0.0/"
+    }
+  ]
+}

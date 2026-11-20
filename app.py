@@ -31,7 +31,21 @@ def _choices(column: str) -> list[str]:
     return sorted(x for x in CODED[column].dropna().astype(str).unique() if x and x != "unmatched")
 
 
-def filter_rows(query: str, sources: list[str], categories: list[str], chapters: list[str], roles: list[str]):
+def _item_choices(column: str) -> list[str]:
+    return sorted(x for x in ITEMS[column].dropna().astype(str).unique() if x)
+
+
+def filter_rows(
+    query: str,
+    sources: list[str],
+    categories: list[str],
+    chapters: list[str],
+    roles: list[str],
+    tasks: list[str],
+    settings: list[str],
+    response_formats: list[str],
+    evaluation_states: list[str],
+):
     rows = CODED.copy()
     if query and query.strip():
         needle = query.strip().casefold()
@@ -47,11 +61,24 @@ def filter_rows(query: str, sources: list[str], categories: list[str], chapters:
         rows = rows[rows["icd_chapter"].isin(chapters)]
     if roles:
         rows = rows[rows["role"].isin(roles)]
+    item_filter = ITEMS
+    if tasks:
+        item_filter = item_filter[item_filter["clinical_task"].isin(tasks)]
+    if settings:
+        item_filter = item_filter[item_filter["care_setting"].isin(settings)]
+    if response_formats:
+        item_filter = item_filter[item_filter["response_format"].isin(response_formats)]
+    if evaluation_states:
+        item_filter = item_filter[item_filter["evaluation_availability"].isin(evaluation_states)]
+    rows = rows[rows["item_id"].isin(item_filter["item_id"])]
 
     merged = rows.merge(
         ITEMS[[
             "item_id", "question", "expected_answer_key", "expected_answer",
             "answer_options", "wrong_option_map", "question_redistribution_allowed", "license",
+            "clinical_task", "care_setting", "user_role", "response_format", "native_stage",
+            "evaluation_method", "reference_standard", "evaluation_availability",
+            "harmonization_provenance",
         ]],
         on="item_id", how="left", suffixes=("", "_item"),
     )
@@ -59,7 +86,9 @@ def filter_rows(query: str, sources: list[str], categories: list[str], chapters:
         table = pd.DataFrame(columns=[
             "item_id", "source", "question", "expected_answer_key", "expected_answer",
             "answer_options", "answer_options_plain",
-            "conditions", "codes", "license_note"
+            "clinical_task", "care_setting", "user_role", "response_format", "native_stage",
+            "conditions", "codes", "code_provenance", "evaluation_method",
+            "reference_standard", "evaluation_availability", "license_note"
         ])
         chart = px.bar(title="No matching items")
     else:
@@ -77,8 +106,17 @@ def filter_rows(query: str, sources: list[str], categories: list[str], chapters:
             wrong_option_map=("wrong_option_map", "first"),
             allowed=("question_redistribution_allowed", "first"),
             license=("license", "first"),
+            clinical_task=("clinical_task", "first"),
+            care_setting=("care_setting", "first"),
+            user_role=("user_role", "first"),
+            response_format=("response_format", "first"),
+            native_stage=("native_stage", "first"),
+            evaluation_method=("evaluation_method", "first"),
+            reference_standard=("reference_standard", "first"),
+            evaluation_availability=("evaluation_availability", "first"),
             conditions=("condition_display", lambda x: "; ".join(dict.fromkeys(x))),
             codes=("code_display", lambda x: "; ".join(dict.fromkeys(x))),
+            code_provenance=("code_provenance", lambda x: "; ".join(dict.fromkeys(x))),
         )
         grouped["license_note"] = grouped.apply(
             lambda x: f"Question shown; source card license: {x['license']}" if x["allowed"]
@@ -123,7 +161,9 @@ def filter_rows(query: str, sources: list[str], categories: list[str], chapters:
         table = grouped[[
             "item_id", "source", "question", "expected_answer_key", "expected_answer",
             "answer_options", "answer_options_plain",
-            "conditions", "codes", "license_note"
+            "clinical_task", "care_setting", "user_role", "response_format", "native_stage",
+            "conditions", "codes", "code_provenance", "evaluation_method",
+            "reference_standard", "evaluation_availability", "license_note"
         ]]
         counts = (
             merged[merged["icd_chapter"] != "Unmatched"]
@@ -138,7 +178,10 @@ def filter_rows(query: str, sources: list[str], categories: list[str], chapters:
     handle = tempfile.NamedTemporaryFile(prefix="benchmark-index-", suffix=".csv", delete=False)
     handle.close()
     table.to_csv(handle.name, index=False)
-    summary = f"{len(table):,} matching items · {len(rows):,} matching item-condition rows"
+    summary = (
+        f"n_indexed = {len(table):,} · n_scored = 0 · n_label_validated = 0 · "
+        f"{len(rows):,} matching item-condition rows"
+    )
     return table, chart, handle.name, summary
 
 
@@ -159,19 +202,24 @@ with gr.Blocks(title="Medical benchmark disease index") as demo:
     with gr.Row():
         category = gr.Dropdown(_choices("ccsr_description"), multiselect=True, label="CCSR category")
         chapter = gr.Dropdown(_choices("icd_chapter"), multiselect=True, label="ICD chapter")
-        role = gr.Dropdown(["tested", "context", "ruled_out", "wrong_option"], multiselect=True, label="Condition role")
+        role = gr.Dropdown(["tested", "context", "ruled_out", "wrong_option", "case_diagnosis"], multiselect=True, label="Condition role")
+    with gr.Row():
+        task = gr.Dropdown(_item_choices("clinical_task"), multiselect=True, label="Clinical task")
+        setting = gr.Dropdown(_item_choices("care_setting"), multiselect=True, label="Care setting")
+        response_format = gr.Dropdown(_item_choices("response_format"), multiselect=True, label="Response format")
+        evaluation_state = gr.Dropdown(_item_choices("evaluation_availability"), multiselect=True, label="Evaluation availability")
     with gr.Row():
         apply_button = gr.Button("Apply filters", variant="primary")
-        clear_button = gr.ClearButton([query, source, category, chapter, role], value="Clear filters")
+        clear_button = gr.ClearButton([query, source, category, chapter, role, task, setting, response_format, evaluation_state], value="Clear filters")
         download = gr.DownloadButton("Download filtered CSV")
     summary = gr.Markdown(elem_id="summary")
     results = gr.Dataframe(label="Results", interactive=False, wrap=True, max_height=650)
     chart = gr.Plot(label="Coverage chart")
-    inputs = [query, source, category, chapter, role]
+    inputs = [query, source, category, chapter, role, task, setting, response_format, evaluation_state]
     outputs = [results, chart, download, summary]
     apply_button.click(filter_rows, inputs=inputs, outputs=outputs)
     query.submit(filter_rows, inputs=inputs, outputs=outputs)
-    demo.load(lambda: filter_rows("", [], [], [], []), outputs=outputs)
+    demo.load(lambda: filter_rows("", [], [], [], [], [], [], [], []), outputs=outputs)
 
 if __name__ == "__main__":
     demo.launch(css=CSS)

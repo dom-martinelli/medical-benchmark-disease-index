@@ -48,6 +48,7 @@ class PipelineTests(unittest.TestCase):
     def test_conservative_license_rule(self):
         self.assertTrue(_redistribution_allowed("mit"))
         self.assertTrue(_redistribution_allowed("apache-2.0"))
+        self.assertTrue(_redistribution_allowed("cc-by-nc-sa-4.0"))
         self.assertFalse(_redistribution_allowed("unknown"))
         self.assertFalse(_redistribution_allowed("mit", "HealthBench"))
         self.assertTrue(_redistribution_allowed("unknown", "MedQA"))

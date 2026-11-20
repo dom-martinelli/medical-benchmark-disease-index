@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "description": "Reusable item-level model evidence. The public release currently contains no linked model-result rows.",
+  "primary_key": ["run_id", "item_id", "metric_name"],
+  "fields": {
+    "run_id": "stable evaluation-run identifier",
+    "model_id": "model family or provider identifier",
+    "model_version": "exact evaluated version",
+    "benchmark_id": "benchmark catalog identifier",
+    "item_id": "stable index item identifier",
+    "scorer": "scorer or rubric implementation",
+    "metric_name": "native benchmark metric",
+    "score": "numeric item-level score when defined",
+    "correct": "boolean correctness for accuracy tasks when defined",
+    "result_provenance": "source of the output or score",
+    "source_url": "public provenance URL when available",
+    "evaluation_date": "date of the run",
+    "availability_state": "item_level_results, aggregate_only, evaluable_not_run, or coverage_only"
+  }
+}

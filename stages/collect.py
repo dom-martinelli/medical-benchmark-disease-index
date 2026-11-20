@@ -231,7 +231,10 @@ def _redistribution_allowed(license_name: str, source: str = "") -> bool:
     if source.strip().casefold() == "medqa":
         return True
     values = {x.strip().casefold() for x in license_name.split(",")}
-    return bool(values & {"mit", "apache-2.0", "apache 2.0", "cc-by-4.0", "cc0-1.0"})
+    return bool(values & {
+        "mit", "apache-2.0", "apache 2.0", "cc-by-4.0", "cc0-1.0",
+        "cc-by-nc-sa-4.0",
+    })
 
 
 def _flag_near_duplicates(df: pd.DataFrame, threshold: float = 0.94) -> pd.DataFrame:

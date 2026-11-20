@@ -100,7 +100,7 @@
       <div>
         <p class="eyebrow">Reproducible tutorial + live demo</p>
         <h1>See which diseases medical benchmarks actually cover.</h1>
-        <p class="lede">Search benchmark items by condition, ICD-10-CM code, benchmark, and the role a condition plays. Inspect expected answers and distractors, then reproduce the same workflow locally from the scripts.</p>
+        <p class="lede">Search benchmark items by condition, disease code, benchmark, clinical task, setting, response format, and condition role. Inspect expected answers and distractors, then see separately whether item-level model evidence exists.</p>
         <div class="actions">
           <a class="button primary" href="demo/">Open the live demo →</a>
           <a class="button secondary" href="https://github.com/dom-martinelli/medical-benchmark-disease-index">View scripts on GitHub</a>
@@ -108,9 +108,9 @@
       </div>
       <aside class="hero-card" aria-label="Current index summary">
         <h2>Current indexed collection</h2>
-        <div class="metric"><strong>14,088</strong><span>benchmark items</span></div>
-        <div class="metric"><strong>10</strong><span>public medical benchmark sources</span></div>
-        <div class="metric"><strong>4</strong><span>condition roles: tested, context, ruled out, wrong option</span></div>
+        <div class="metric"><strong>20,693</strong><span>indexed benchmark items</span></div>
+        <div class="metric"><strong>11</strong><span>public benchmark sources, including LiveClin</span></div>
+        <div class="metric"><strong>5</strong><span>condition roles, including native case diagnosis</span></div>
       </aside>
     </div>
 
@@ -215,10 +215,10 @@ python run.py --approve-pilot</pre></div>
     </section>
 
     <section class="shell" aria-labelledby="limits-heading">
-      <div class="section-head"><h2 id="limits-heading">What the index does and does not claim.</h2><p>All condition, role, and code labels were assigned by an AI model. They were not reviewed by a clinician. This release is an item-level coverage index, not a benchmark of model performance.</p></div>
+      <div class="section-head"><h2 id="limits-heading">What the index does and does not claim.</h2><p>Condition and role labels for the original ten sources were assigned by an AI model and were not reviewed by a clinician. LiveClin's case diagnosis comes from its native ICD-10 field. Content coverage and model-performance evidence remain separate layers.</p></div>
       <div class="sources">
-        <div class="definition"><strong>Included:</strong> question-level and sometimes answer-option-level condition roles, ICD-10-CM and CCSR mappings, expected answers where the source provides them, answer options, and public-safe source traceability.</div>
-        <div class="definition"><strong>Not included:</strong> model scoring, claims of clinical validation, or public redistribution of HealthBench conversation text. A zero-result query means no indexed match was found; it is not proof that no subtle semantic relation exists.</div>
+        <div class="definition"><strong>Included:</strong> item-level task, setting, user role, response format, evaluation method, reference standard, condition roles, code provenance, expected answers where available, and public-safe source traceability.</div>
+        <div class="definition"><strong>Not included yet:</strong> linked item-level model scores or claims of clinical validation. The explorer therefore reports <code>n_scored = 0</code> and <code>n_label_validated = 0</code>, instead of treating aggregate leaderboard results as disease-specific evidence.</div>
       </div>
     </section>
   </main>

@@ -1,6 +1,38 @@
 # Medical benchmark disease index
 
-This repository collects public medical benchmark items, labels their conditions with a language model, maps those condition names to official ICD-10-CM and CCSR files, validates a sample automatically, and produces a Gradio explorer plus a draft report.
+This repository builds a disease-centered index of medical AI benchmark items. It separates three layers: clinical content, reusable evaluation evidence, and a filtered specialty view. The public explorer contains 20,693 items across the original ten sources plus LiveClin 2025 H1.
+
+For the original sources, an AI model assigned question-level and sometimes answer-option-level condition roles, followed by deterministic ICD-10-CM and CCSR lookup. LiveClin is different: its case-level diagnosis and ICD-10 code come from native benchmark fields and are displayed with the role `case_diagnosis`. None of the AI-assigned labels have been independently human-validated.
+
+## Harmonized item schema
+
+Every public item records:
+
+- benchmark and stable item ID;
+- clinical task, care setting, user role, and response format;
+- evaluation method, reference standard, and evaluation-availability state;
+- one or more condition/code rows with code system, code provenance, label provenance, label scope, and condition role;
+- expected answer and answer options when the source permits redistribution.
+
+The explorer reports three explicit denominators:
+
+- `n_indexed`: items in the current content slice;
+- `n_scored`: items with reusable item-level model-result rows;
+- `n_label_validated`: items whose disease labels were independently human-validated.
+
+The current public release has no attached item-level model-result rows and no independent human label-validation rows, so the latter two denominators are zero. Answer keys and rubrics make many items evaluable, but they are not the same as completed model runs.
+
+The benchmark catalog distinguishes fully indexed sources from candidates. MedHELM MIMIC-IV Billing Code, MIMIC-IV-Ext CDS, and MIMIC-IV-Ext MedicalBench are cataloged as candidates only. Their credentialed source data are not republished.
+
+## Rebuild the public explorer data
+
+The rebuild script pins LiveClin to a verified dataset revision, adds its 6,605 MCQs, applies the source harmonization rules, creates an empty-but-typed evaluation-results table, and regenerates the browser JSON:
+
+```bash
+python scripts/rebuild_public_explorer.py
+```
+
+Configuration is in `config/source_harmonization.json`, `config/benchmark_catalog.json`, and `config/evaluation_result_schema.json`.
 
 ## Live tutorial and demo
 
@@ -17,6 +49,8 @@ Prepared examples:
 In this project, the role `tested` means that knowledge of the condition is
 needed to answer the item. It does not mean the item was quality-tested or that
 a model was evaluated on it.
+
+The separate role `case_diagnosis` means a benchmark supplied a diagnosis or code at the case level. It does not imply that every question in the case directly tests that diagnosis.
 
 ## Step-by-step walkthrough
 
@@ -94,9 +128,10 @@ without downloading or publishing restricted source text.
 
 ## Four condition roles, with real examples
 
-These links each open one indexed item. The roles are model-assigned and have
-not been adjudicated by a clinician; the examples show how the role categories
-are intended to be used.
+These links each open one indexed item. These four roles are model-assigned and
+have not been adjudicated by a clinician; the examples show how the categories
+are intended to be used. LiveClin's additional `case_diagnosis` role comes from
+native benchmark metadata.
 
 | Role | What it means here | Example |
 | --- | --- | --- |

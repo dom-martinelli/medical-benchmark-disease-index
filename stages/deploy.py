@@ -13,6 +13,13 @@ from .common import DATA, ROOT, append_log
 
 
 def _build_static_data(destination: Path) -> None:
+    # The GitHub Pages build is the canonical static bundle. It contains the
+    # harmonized item fields, benchmark catalog, and evaluation-availability
+    # states produced by scripts/rebuild_public_explorer.py.
+    canonical = ROOT / "docs" / "demo" / "data" / "explorer.json"
+    if canonical.exists():
+        shutil.copy2(canonical, destination)
+        return
     coded = pd.read_parquet(DATA / "explorer_coded.parquet").fillna("")
     items = pd.read_parquet(DATA / "explorer_items.parquet").fillna("")
     rows_by_item: dict[str, list[list[str]]] = {}
@@ -105,7 +112,7 @@ def run() -> str | None:
         staging = Path(temp_name)
         (staging / "data").mkdir()
         if space_sdk == "static":
-            shutil.copy2(ROOT / "static_space" / "index.html", staging / "index.html")
+            shutil.copy2(ROOT / "docs" / "demo" / "index.html", staging / "index.html")
             _build_static_data(staging / "data" / "explorer.json")
             (staging / "README.md").write_text(
                 "---\ntitle: Medical Benchmark Disease Index\nemoji: 🩺\ncolorFrom: green\ncolorTo: blue\n"

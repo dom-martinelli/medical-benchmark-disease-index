@@ -5,247 +5,214 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Medical benchmark disease index</title>
   <style>
-    :root { color-scheme: light; --ink:#17313a; --muted:#60717a; --teal:#176b87; --line:#d9e4e7; --bg:#f4f8f9; }
+    :root { color-scheme:light; --ink:#17313a; --muted:#60717a; --teal:#176b87; --dark:#123f4b; --line:#d9e4e7; --bg:#f4f8f9; --green:#edf8f1; }
     * { box-sizing:border-box; }
     body { margin:0; color:var(--ink); background:var(--bg); font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-    main { max-width:1500px; margin:auto; padding:20px; }
-    header { padding:28px; color:white; background:linear-gradient(120deg,#133f4c,#176b87); border-radius:16px; }
-    h1 { margin:0 0 6px; font-size:clamp(1.7rem,3vw,2.35rem); }
-    header p { margin:0; max-width:850px; opacity:.94; }
-    .panel { margin-top:18px; padding:18px; background:white; border:1px solid var(--line); border-radius:14px; box-shadow:0 3px 16px #14343d0b; }
-    .filters { display:grid; grid-template-columns:repeat(5,minmax(150px,1fr)); gap:12px; }
+    main { max-width:1540px; margin:auto; padding:20px; }
+    header { padding:30px; color:white; background:linear-gradient(120deg,#123f4b,#176b87 62%,#238aa3); border-radius:18px; }
+    h1 { margin:0 0 7px; font-size:clamp(1.8rem,3vw,2.5rem); } h2,h3 { margin:0 0 10px; }
+    header p { margin:0; max-width:940px; opacity:.95; }
+    .panel { margin-top:18px; padding:19px; background:white; border:1px solid var(--line); border-radius:14px; box-shadow:0 3px 16px #14343d0b; }
+    .tabs,.actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+    .tab { color:var(--ink); background:white; border:1px solid #b9cbd0; } .tab.active,.primary { color:white; border-color:var(--teal); background:var(--teal); }
+    .view[hidden] { display:none; }
+    .kpis { display:grid; grid-template-columns:repeat(3,minmax(160px,1fr)); gap:12px; margin-top:16px; }
+    .kpi,.layer { padding:15px; border:1px solid var(--line); border-radius:12px; background:#f9fcfc; }
+    .kpi strong { display:block; color:var(--dark); font-size:1.65rem; } .kpi span,.note { color:var(--muted); }
+    .filters { display:grid; grid-template-columns:repeat(3,minmax(190px,1fr)); gap:12px; }
     label { display:grid; gap:5px; font-weight:650; }
-    input, select, button { min-height:42px; padding:8px 10px; border:1px solid #b9cbd0; border-radius:9px; color:var(--ink); background:white; font:inherit; }
-    select[multiple] { min-height:110px; }
-    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
-    button { cursor:pointer; font-weight:700; }
-    .primary { color:white; border-color:var(--teal); background:var(--teal); }
-    #summary { margin:16px 0 8px; color:var(--teal); font-weight:750; }
-    .note { color:var(--muted); font-size:.9rem; }
-    .chart-row { display:grid; grid-template-columns:minmax(190px,360px) 1fr 70px; gap:10px; align-items:center; margin:7px 0; }
-    .bar { display:flex; height:17px; overflow:hidden; background:#edf3f4; border-radius:999px; }
-    .segment { min-width:1px; }
-    .table-wrap { overflow:auto; max-height:700px; border:1px solid var(--line); border-radius:10px; }
-    table { width:100%; border-collapse:collapse; background:white; }
-    th { position:sticky; top:0; z-index:1; text-align:left; color:white; background:#245564; }
-    th, td { padding:10px; border-bottom:1px solid var(--line); vertical-align:top; }
-    tbody tr:nth-child(even) { background:#f8fbfb; }
-    td:nth-child(1) { white-space:nowrap; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem; }
-    details { min-width:280px; max-width:650px; }
-    summary { cursor:pointer; color:var(--teal); }
-    .pill { display:inline-block; margin:1px 2px 1px 0; padding:2px 7px; border-radius:999px; background:#e8f3f5; font-size:.82rem; }
+    input,select,button { min-height:42px; padding:8px 10px; border:1px solid #b9cbd0; border-radius:9px; color:var(--ink); background:white; font:inherit; }
+    select[multiple] { min-height:105px; } button { cursor:pointer; font-weight:700; }
+    #summary { margin:16px 0 8px; color:var(--teal); font-weight:750; } .note { font-size:.9rem; }
+    .architecture { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .layer small { display:block; margin-bottom:5px; color:var(--teal); font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+    .callout { padding:14px 16px; border-left:4px solid var(--teal); border-radius:8px; background:#eef7f8; }
+    .chart-row { display:grid; grid-template-columns:minmax(190px,370px) 1fr 74px; gap:10px; align-items:center; margin:7px 0; }
+    .bar { display:flex; height:17px; overflow:hidden; background:#edf3f4; border-radius:999px; } .segment { min-width:1px; }
+    .table-wrap { overflow:auto; max-height:720px; border:1px solid var(--line); border-radius:10px; }
+    table { width:100%; border-collapse:collapse; background:white; } th { position:sticky; top:0; z-index:1; text-align:left; color:white; background:#245564; }
+    th,td { padding:10px; border-bottom:1px solid var(--line); vertical-align:top; } tbody tr:nth-child(even) { background:#f8fbfb; }
+    td:first-child { white-space:nowrap; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem; }
+    details { min-width:280px; max-width:700px; } summary { cursor:pointer; color:var(--teal); }
+    .pill { display:inline-block; margin:2px 3px 2px 0; padding:2px 7px; border-radius:999px; background:#e8f3f5; font-size:.82rem; }
+    .pill.warm { background:#fff0d9; } .pill.green { background:#dff2e6; }
     .answer-options { margin:8px 0 0; padding:0; list-style:none; display:grid; gap:7px; min-width:340px; }
     .answer-options li { padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:#fafcfc; }
-    .answer-options li.expected { border-color:#72aa8a; background:#edf8f1; }
-    .answer-options li.incorrect { border-color:#e4c3c3; background:#fff8f8; }
-    .badge { display:inline-block; margin-left:6px; padding:1px 6px; border-radius:999px; font-size:.72rem; font-weight:750; }
-    .badge.expected { color:#195d35; background:#ccebd7; }
-    .badge.incorrect { color:#8b3333; background:#f5dede; }
-    .badge.flagged { color:#7a3b00; background:#ffe4b8; }
-    .loading { padding:40px; text-align:center; color:var(--muted); }
-    @media (max-width:1050px) { .filters { grid-template-columns:repeat(2,minmax(150px,1fr)); } }
-    @media (max-width:620px) { main { padding:10px; } .filters { grid-template-columns:1fr; } .chart-row { grid-template-columns:130px 1fr 55px; } }
+    .answer-options li.expected { border-color:#72aa8a; background:var(--green); } .answer-options li.incorrect { border-color:#e4c3c3; background:#fff8f8; }
+    .badge { display:inline-block; margin:2px 2px 2px 5px; padding:1px 6px; border-radius:999px; font-size:.72rem; font-weight:750; }
+    .badge.expected { color:#195d35; background:#ccebd7; } .badge.incorrect { color:#8b3333; background:#f5dede; } .badge.flagged { color:#7a3b00; background:#ffe4b8; }
+    .status-indexed { color:#195d35; font-weight:750; } .status-candidate { color:#7a3b00; font-weight:750; }
+    .loading { padding:40px; text-align:center; color:var(--muted); } a { color:var(--teal); }
+    @media (max-width:1050px) { .filters { grid-template-columns:repeat(2,minmax(160px,1fr)); } .architecture { grid-template-columns:1fr; } }
+    @media (max-width:680px) { main { padding:10px; } .filters,.kpis { grid-template-columns:1fr; } .chart-row { grid-template-columns:130px 1fr 55px; } }
   </style>
 </head>
-<body>
-<main>
+<body><main>
   <header>
     <h1>Medical benchmark disease index</h1>
-    <p>Search what public medical AI benchmarks cover by condition and standard disease code.</p>
+    <p>Explore which conditions medical AI benchmarks cover, how each item is structured, and whether reusable item-level model evidence is actually available.</p>
+    <div class="tabs" role="tablist" aria-label="Explorer sections">
+      <button class="tab active" data-view="content">Content index</button>
+      <button class="tab" data-view="evidence">Evaluation evidence</button>
+      <button class="tab" data-view="catalog">Benchmark catalog</button>
+    </div>
   </header>
 
   <section class="panel">
-    <div class="filters">
-      <label>Condition or ICD-10-CM code
-        <input id="query" type="search" placeholder="e.g., diabetes or E11">
-      </label>
-      <label>Benchmark
-        <select id="source" multiple></select>
-      </label>
-      <label>CCSR category
-        <select id="category" multiple></select>
-      </label>
-      <label>ICD chapter
-        <select id="chapter" multiple></select>
-      </label>
-      <label>Condition role
-        <select id="role" multiple></select>
-      </label>
+    <div class="architecture">
+      <div class="layer"><small>Layer A</small><h3>Clinical content index</h3><div>Item → condition → disease code → condition role → task and setting</div></div>
+      <div class="layer"><small>Layer B</small><h3>Evaluation evidence</h3><div>Model version → run → item result → scorer → provenance</div></div>
+      <div class="layer"><small>Layer C</small><h3>Specialty view</h3><div>Filtered coverage, benchmark composition, score availability, and comparison limits</div></div>
     </div>
-    <div class="actions">
-      <button class="primary" id="apply">Apply filters</button>
-      <button id="clear">Clear filters</button>
-      <button id="download">Download filtered CSV</button>
+    <div class="kpis">
+      <div class="kpi"><strong id="nIndexed">…</strong><span><code>n_indexed</code>: items in the selected content slice</span></div>
+      <div class="kpi"><strong id="nScored">…</strong><span><code>n_scored</code>: items with reusable model-result rows</span></div>
+      <div class="kpi"><strong id="nValidated">…</strong><span><code>n_label_validated</code>: labels independently human-validated</span></div>
     </div>
-    <div id="summary">Loading redacted explorer data…</div>
-    <div class="note">Use Command/Ctrl-click to select more than one value. Question text is withheld where redistribution permission is unclear. HealthBench results show item IDs and derived labels, but not the conversation text.</div>
   </section>
 
-  <section class="panel">
-    <h2>Coverage by ICD-10-CM chapter</h2>
-    <div id="chart" class="loading">Loading…</div>
-  </section>
+  <div id="content" class="view">
+    <section class="panel">
+      <h2>Filter the content index</h2>
+      <div class="filters">
+        <label>Condition or disease code<input id="query" type="search" placeholder="e.g., growth disorder, Q96, or E11"></label>
+        <label>Benchmark<select id="source" multiple></select></label>
+        <label>Clinical task<select id="task" multiple></select></label>
+        <label>Care setting<select id="setting" multiple></select></label>
+        <label>Response format<select id="format" multiple></select></label>
+        <label>Evaluation availability<select id="evaluation" multiple></select></label>
+        <label>CCSR category<select id="category" multiple></select></label>
+        <label>ICD chapter<select id="chapter" multiple></select></label>
+        <label>Condition role<select id="role" multiple></select></label>
+      </div>
+      <div class="actions"><button class="primary" id="apply">Apply filters</button><button id="clear">Clear filters</button><button id="download">Download filtered CSV</button></div>
+      <div id="summary">Loading explorer data…</div>
+      <div class="note">Task, setting, and response attributes for older benchmarks are source-level harmonization rules. Disease labels for those items were assigned by an AI model. LiveClin contributes native case-level ICD-10 labels, shown with the distinct role <code>case_diagnosis</code>.</div>
+    </section>
+    <section class="panel"><h2>Coverage by ICD chapter</h2><div id="chart" class="loading">Loading…</div></section>
+    <section class="panel"><h2>Matching benchmark items</h2><div id="table" class="loading">Loading…</div></section>
+  </div>
 
-  <section class="panel">
-    <h2>Matching benchmark items</h2>
-    <div id="table" class="loading">Loading…</div>
-  </section>
+  <div id="evidence" class="view" hidden>
+    <section class="panel">
+      <h2>Evaluation evidence is separate from content coverage</h2>
+      <div class="callout" id="evidenceNote">Loading…</div>
+      <p>A benchmark item can be indexed even when no model output is available. The explorer records these states rather than converting a whole-benchmark leaderboard score into a disease-specific score.</p>
+      <div class="architecture">
+        <div class="layer"><small>State 1</small><h3>Item-level results</h3><div>Disease-stratified scores can be calculated from stored outputs or item scores.</div></div>
+        <div class="layer"><small>State 2</small><h3>Aggregate only</h3><div>A whole-benchmark score exists, but it cannot be disaggregated by disease.</div></div>
+        <div class="layer"><small>State 3</small><h3>Evaluable, not run</h3><div>An answer key or rubric exists, but no reusable item-level result is attached.</div></div>
+      </div>
+    </section>
+    <section class="panel"><h2>Current evaluation availability by benchmark</h2><div id="evidenceTable" class="loading">Loading…</div></section>
+  </div>
+
+  <div id="catalog" class="view" hidden>
+    <section class="panel">
+      <h2>Benchmarks included or under consideration</h2>
+      <p class="note">“Indexed” means item rows are in this public explorer. “Candidate” means the source was audited at catalog level but its item files have not been added. Credentialed MIMIC-derived data are never republished here.</p>
+      <div id="catalogTable" class="loading">Loading…</div>
+    </section>
+  </div>
 </main>
 
 <script>
-const COLORS = ["#176b87", "#e07a5f", "#3d9970", "#8f6bb3", "#d4a72c", "#6c8ebf", "#c45a87"];
-const MAX_RENDERED = 300;
-let DATA = null;
-let current = [];
-let ITEM_FILTER = "";
+const COLORS=["#176b87","#e07a5f","#3d9970","#8f6bb3","#d4a72c","#6c8ebf","#c45a87","#447a67","#b56d45","#536d9b","#996b56"];
+const MAX_RENDERED=300; let DATA=null,current=[],ITEM_FILTER="";
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const selected=id=>new Set([...$(id).selectedOptions].map(o=>o.value));
+const unique=values=>[...new Set(values.filter(Boolean))];
+const stateLabel=value=>({answer_key_available_not_scored:"Answer key available; not scored",rubric_available_not_scored:"Rubric available; not scored",item_level_results:"Item-level results available",aggregate_only:"Aggregate score only",coverage_only:"Coverage only"}[value]||value);
 
-const $ = id => document.getElementById(id);
-const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const selected = id => new Set([...$(id).selectedOptions].map(o => o.value));
-const unique = values => [...new Set(values.filter(Boolean))];
-
-function fillSelect(id, values) {
-  $(id).innerHTML = values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
-}
-
-function rowMatches(row, query, categories, chapters, roles) {
-  const [condition, role, _noCondition, code, category, chapter] = row;
-  if (query && !`${condition} ${code}`.toLocaleLowerCase().includes(query)) return false;
-  if (categories.size && !categories.has(category)) return false;
-  if (chapters.size && !chapters.has(chapter)) return false;
-  if (roles.size && !roles.has(role)) return false;
+function fillSelect(id,values,labeler=x=>x){$(id).innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(labeler(v))}</option>`).join("");}
+function rowMatches(row,query,categories,chapters,roles){
+  const [condition,role,noCondition,code,category,chapter]=row;
+  if(query&&!`${condition} ${code} ${noCondition}`.toLocaleLowerCase().includes(query))return false;
+  if(categories.size&&!categories.has(category))return false;
+  if(chapters.size&&!chapters.has(chapter))return false;
+  if(roles.size&&!roles.has(role))return false;
   return true;
 }
-
-function filterData() {
-  const query = $("query").value.trim().toLocaleLowerCase();
-  const sources = selected("source");
-  const categories = selected("category");
-  const chapters = selected("chapter");
-  const roles = selected("role");
-  current = [];
-  for (const item of DATA.items) {
-    if (ITEM_FILTER && item.id !== ITEM_FILTER) continue;
-    if (sources.size && !sources.has(item.s)) continue;
-    const rows = item.r.filter(row => rowMatches(row, query, categories, chapters, roles));
-    if (rows.length) current.push({...item, matched: rows});
+function filterData(){
+  const query=$("query").value.trim().toLocaleLowerCase();
+  const sources=selected("source"),tasks=selected("task"),settings=selected("setting"),formats=selected("format"),evaluations=selected("evaluation"),categories=selected("category"),chapters=selected("chapter"),roles=selected("role");
+  current=[];
+  for(const item of DATA.items){
+    if(ITEM_FILTER&&item.id!==ITEM_FILTER)continue;
+    if(sources.size&&!sources.has(item.s))continue; if(tasks.size&&!tasks.has(item.t))continue; if(settings.size&&!settings.has(item.g))continue;
+    if(formats.size&&!formats.has(item.f))continue; if(evaluations.size&&!evaluations.has(item.ev))continue;
+    const rows=item.r.filter(row=>rowMatches(row,query,categories,chapters,roles)); if(rows.length)current.push({...item,matched:rows});
   }
   render();
 }
-
-function render() {
-  const rowCount = current.reduce((n, item) => n + item.matched.length, 0);
-  $("summary").textContent = `${current.length.toLocaleString()} matching items · ${rowCount.toLocaleString()} matching item-condition rows`;
-  renderChart();
-  renderTable();
+function render(){
+  const rowCount=current.reduce((n,item)=>n+item.matched.length,0),validated=current.filter(item=>item.lv).length;
+  $("nIndexed").textContent=current.length.toLocaleString(); $("nScored").textContent="0"; $("nValidated").textContent=validated.toLocaleString();
+  $("summary").textContent=`${current.length.toLocaleString()} matching items · ${rowCount.toLocaleString()} matching item-condition rows · 0 attached item-level model results`;
+  renderChart(); renderTable();
 }
-
-function renderChart() {
-  const counts = new Map();
-  const sourceNames = DATA.options.sources;
-  for (const item of current) {
-    for (const chapter of unique(item.matched.map(r => r[5]).filter(x => x !== "Unmatched"))) {
-      const key = `${chapter}\u0000${item.s}`;
-      counts.set(key, (counts.get(key) || 0) + 1);
-    }
-  }
-  const totals = new Map();
-  for (const [key, value] of counts) {
-    const chapter = key.split("\u0000")[0];
-    totals.set(chapter, (totals.get(chapter) || 0) + value);
-  }
-  const chapters = [...totals].sort((a,b) => b[1] - a[1]);
-  const max = Math.max(1, ...chapters.map(x => x[1]));
-  if (!chapters.length) { $("chart").innerHTML = '<div class="note">No coded chapters match these filters.</div>'; return; }
-  $("chart").className = "";
-  $("chart").innerHTML = chapters.map(([chapter,total]) => {
-    const segments = sourceNames.map((source,i) => {
-      const value = counts.get(`${chapter}\u0000${source}`) || 0;
-      return value ? `<span class="segment" title="${esc(source)}: ${value.toLocaleString()}" style="width:${100*value/max}%;background:${COLORS[i%COLORS.length]}"></span>` : "";
-    }).join("");
+function renderChart(){
+  const counts=new Map(),sourceNames=DATA.options.sources;
+  for(const item of current)for(const chapter of unique(item.matched.map(r=>r[5]).filter(x=>x&&x!=="Unmatched"))){const key=`${chapter}\u0000${item.s}`;counts.set(key,(counts.get(key)||0)+1);}
+  const totals=new Map(); for(const [key,value] of counts){const chapter=key.split("\u0000")[0];totals.set(chapter,(totals.get(chapter)||0)+value);}
+  const chapters=[...totals].sort((a,b)=>b[1]-a[1]),max=Math.max(1,...chapters.map(x=>x[1]));
+  if(!chapters.length){$("chart").innerHTML='<div class="note">No coded chapters match these filters.</div>';return;}
+  $("chart").className=""; $("chart").innerHTML=chapters.map(([chapter,total])=>{
+    const segments=sourceNames.map((source,i)=>{const value=counts.get(`${chapter}\u0000${source}`)||0;return value?`<span class="segment" title="${esc(source)}: ${value.toLocaleString()}" style="width:${100*value/max}%;background:${COLORS[i%COLORS.length]}"></span>`:"";}).join("");
     return `<div class="chart-row"><span>${esc(chapter)}</span><span class="bar">${segments}</span><strong>${total.toLocaleString()}</strong></div>`;
   }).join("");
 }
-
-function renderTable() {
-  const shown = current.slice(0, MAX_RENDERED);
-  const more = current.length > MAX_RENDERED ? `<p class="note">Showing the first ${MAX_RENDERED.toLocaleString()} items. Download the CSV for all ${current.length.toLocaleString()} matches.</p>` : "";
-  if (!shown.length) { $("table").innerHTML = '<div class="note" style="padding:20px">No matching items.</div>'; return; }
-  const body = shown.map(item => {
-    const conditions = unique(item.matched.map(r => r[0] ? `${r[0]} [${r[1]}]` : `[${r[2]}]`));
-    const codes = unique(item.matched.map(r => r[3] === "unmatched" ? "unmatched" : `${r[3]} · ${r[4]}`));
-    const question = `<details><summary>Show question</summary><p>${esc(item.q)}</p></details>`;
-    const optionEntries = Object.entries(item.o || {});
-    const options = optionEntries.length ? `<details><summary>Show answer options</summary><ol class="answer-options">${optionEntries.map(([key,value]) => {
-      const isExpected = String(key) === String(item.k);
-      const status = isExpected ? "expected" : "incorrect";
-      const flagged = (item.w && item.w[key]) || [];
-      const flagBadge = flagged.length ? `<span class="badge flagged">wrong-option condition: ${esc(flagged.join(", "))}</span>` : "";
-      return `<li class="${status}"><strong>${esc(key)}.</strong> ${esc(value)} <span class="badge ${status}">${isExpected ? "expected" : "incorrect"}</span>${flagBadge}</li>`;
-    }).join("")}</ol></details>` : `<span class="note">Options unavailable or withheld.</span>`;
-    const pills = values => values.map(v => `<span class="pill">${esc(v)}</span>`).join(" ");
-    return `<tr><td>${esc(item.id)}</td><td>${esc(item.s)}</td><td>${question}</td><td>${esc(item.a)}</td><td>${options}</td><td>${pills(conditions)}</td><td>${pills(codes)}</td><td>${esc(item.n)}</td></tr>`;
+function renderTable(){
+  const shown=current.slice(0,MAX_RENDERED),more=current.length>MAX_RENDERED?`<p class="note">Showing the first ${MAX_RENDERED.toLocaleString()} items. Download the CSV for all ${current.length.toLocaleString()} matches.</p>`:"";
+  if(!shown.length){$("table").innerHTML='<div class="note" style="padding:20px">No matching items.</div>';return;}
+  const body=shown.map(item=>{
+    const conditions=unique(item.matched.map(r=>r[0]?`${r[0]} [${r[1]}]`:`[${r[2]}]`));
+    const codes=unique(item.matched.map(r=>r[3]==="unmatched"?"unmatched":`${r[3]} (${r[6]||"code system unknown"})`));
+    const provenance=unique(item.matched.map(r=>`${r[7]} · ${r[8]} · ${r[9]}`));
+    const question=`<details><summary>Show item</summary><p>${esc(item.q).replaceAll("\n","<br>")}</p></details>`;
+    const optionEntries=Object.entries(item.o||{});
+    const options=optionEntries.length?`<details><summary>Show answer options</summary><ol class="answer-options">${optionEntries.map(([key,value])=>{const isExpected=String(key)===String(item.k),status=isExpected?"expected":"incorrect",flagged=(item.w&&item.w[key])||[],flagBadge=flagged.length?`<span class="badge flagged">wrong-option condition: ${esc(flagged.join(", "))}</span>`:"";return `<li class="${status}"><strong>${esc(key)}.</strong> ${esc(value)} <span class="badge ${status}">${isExpected?"expected":"incorrect"}</span>${flagBadge}</li>`;}).join("")}</ol></details>`:`<span class="note">Options unavailable or withheld.</span>`;
+    const pills=(values,cls="")=>values.map(v=>`<span class="pill ${cls}">${esc(v)}</span>`).join(" ");
+    const attributes=pills([item.t,item.g,item.u,item.f])+(item.stage?`<div class="note">Native stage: ${esc(item.stage)}</div>`:"")+`<div class="note">${esc(item.hp)}</div>`;
+    const evalInfo=`<span class="pill warm">${esc(stateLabel(item.ev))}</span><div class="note">${esc(item.e)} · ${esc(item.ref)}</div>`;
+    return `<tr><td>${esc(item.id)}</td><td>${esc(item.s)}</td><td>${attributes}</td><td>${question}</td><td>${esc(item.a)}</td><td>${options}</td><td>${pills(conditions)}</td><td>${pills(codes,"green")}<div class="note">${esc(provenance.join("; "))}</div></td><td>${evalInfo}<div class="note">${esc(item.n)}</div></td></tr>`;
   }).join("");
-  $("table").className = "";
-  $("table").innerHTML = `${more}<div class="table-wrap"><table><thead><tr><th>Item ID</th><th>Benchmark</th><th>Question</th><th>Expected answer</th><th>Answer options</th><th>Conditions</th><th>Codes</th><th>License note</th></tr></thead><tbody>${body}</tbody></table></div>`;
+  $("table").className=""; $("table").innerHTML=`${more}<div class="table-wrap"><table><thead><tr><th>Item ID</th><th>Benchmark</th><th>Task & setting</th><th>Item</th><th>Expected answer</th><th>Answer options</th><th>Conditions</th><th>Codes & provenance</th><th>Evaluation</th></tr></thead><tbody>${body}</tbody></table></div>`;
 }
-
-function csvCell(value) { return `"${String(value ?? "").replaceAll('"','""')}"`; }
-function downloadCsv() {
-  const header = ["item_id","source","question","expected_answer","answer_options","wrong_option_conditions","conditions","codes","license_note"];
-  const lines = [header.map(csvCell).join(",")];
-  for (const item of current) {
-    const conditions = unique(item.matched.map(r => r[0] ? `${r[0]} [${r[1]}]` : `[${r[2]}]`)).join("; ");
-    const codes = unique(item.matched.map(r => r[3] === "unmatched" ? "unmatched" : `${r[3]} · ${r[4]}`)).join("; ");
-    const options = Object.entries(item.o || {}).map(([key,value]) => `${key}. ${value}`).join("; ");
-    const wrongOptionConditions = Object.entries(item.w || {}).map(([key,values]) => `${key}: ${values.join(", ")}`).join("; ");
-    lines.push([item.id,item.s,item.q,item.a,options,wrongOptionConditions,conditions,codes,item.n].map(csvCell).join(","));
+function renderEvidence(){
+  $("evidenceNote").textContent=DATA.evaluation_note; const bySource=new Map();
+  for(const item of DATA.items){const key=`${item.s}\u0000${item.ev}`;bySource.set(key,(bySource.get(key)||0)+1);}
+  const rows=[...bySource].map(([key,count])=>{const [source,state]=key.split("\u0000");return `<tr><td>${esc(source)}</td><td>${count.toLocaleString()}</td><td>${esc(stateLabel(state))}</td><td>0</td><td>Coverage and evaluability only</td></tr>`;}).join("");
+  $("evidenceTable").className=""; $("evidenceTable").innerHTML=`<div class="table-wrap"><table><thead><tr><th>Benchmark</th><th>Indexed items</th><th>Available reference</th><th>Attached scored items</th><th>Permitted use now</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function renderCatalog(){
+  const rows=DATA.catalog.map(entry=>{const candidate=entry.ingestion_status.startsWith("candidate"),statusClass=candidate?"status-candidate":"status-indexed";return `<tr><td>${esc(entry.benchmark_name)}</td><td>${esc(entry.family)}</td><td>${Number(entry.item_count).toLocaleString()}</td><td class="${statusClass}">${esc(entry.ingestion_status)}</td><td>${esc(entry.access)}</td><td>${esc(entry.native_code_system)}</td><td>${esc(entry.code_provenance)}</td><td>${esc(entry.score_availability)}</td><td><a href="${esc(entry.source_url)}" target="_blank" rel="noopener">Source</a></td></tr>`;}).join("");
+  $("catalogTable").className=""; $("catalogTable").innerHTML=`<div class="table-wrap"><table><thead><tr><th>Benchmark</th><th>Family</th><th>Items/cases</th><th>Status</th><th>Access</th><th>Native code system</th><th>Code provenance</th><th>Score availability</th><th>Link</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function csvCell(value){return `"${String(value??"").replaceAll('"','""')}"`;}
+function downloadCsv(){
+  const header=["item_id","source","clinical_task","care_setting","user_role","response_format","native_stage","question","expected_answer","answer_options","wrong_option_conditions","conditions","codes","code_provenance","evaluation_method","reference_standard","evaluation_availability","license_note"],lines=[header.map(csvCell).join(",")];
+  for(const item of current){
+    const conditions=unique(item.matched.map(r=>r[0]?`${r[0]} [${r[1]}]`:`[${r[2]}]`)).join("; "),codes=unique(item.matched.map(r=>`${r[3]} (${r[6]})`)).join("; "),provenance=unique(item.matched.map(r=>`${r[7]} | ${r[8]} | ${r[9]}`)).join("; "),options=Object.entries(item.o||{}).map(([key,value])=>`${key}. ${value}`).join("; "),wrong=Object.entries(item.w||{}).map(([key,values])=>`${key}: ${values.join(", ")}`).join("; ");
+    lines.push([item.id,item.s,item.t,item.g,item.u,item.f,item.stage,item.q,item.a,options,wrong,conditions,codes,provenance,item.e,item.ref,item.ev,item.n].map(csvCell).join(","));
   }
-  const url = URL.createObjectURL(new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"}));
-  const a = document.createElement("a"); a.href=url; a.download="medical-benchmark-filtered.csv"; a.click(); URL.revokeObjectURL(url);
+  const url=URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="medical-benchmark-harmonized-filter.csv";a.click();URL.revokeObjectURL(url);
 }
-
-async function init() {
-  try {
-    DATA = await (await fetch("data/explorer.json")).json();
-    fillSelect("source", DATA.options.sources);
-    fillSelect("category", DATA.options.categories);
-    fillSelect("chapter", DATA.options.chapters);
-    fillSelect("role", DATA.options.roles);
-    const params = new URLSearchParams(window.location.search);
-    ITEM_FILTER = params.get("item") || "";
-    $("query").value = params.get("q") || "";
-    for (const id of ["source", "category", "chapter", "role"]) {
-      const selectedValues = new Set((params.get(id) || "").split(",").filter(Boolean));
-      for (const option of $(id).options) option.selected = selectedValues.has(option.value);
-    }
-    filterData();
-    requestAnimationFrame(() => {
-      if (params.get("expand") === "answers") {
-        const firstOptions = document.querySelector("#table tbody tr:first-child td:nth-child(5) details");
-        if (firstOptions) firstOptions.open = true;
-      }
-      if (params.get("expand") === "question") {
-        const firstQuestion = document.querySelector("#table tbody tr:first-child td:nth-child(3) details");
-        if (firstQuestion) firstQuestion.open = true;
-      }
-      if (params.get("focus") === "results") $("table").scrollIntoView({block: "start"});
-    });
-  } catch (error) {
-    $("summary").textContent = "The explorer data could not be loaded.";
-    $("table").textContent = error.message;
-  }
+function switchView(id){for(const view of document.querySelectorAll(".view"))view.hidden=view.id!==id;for(const tab of document.querySelectorAll(".tab"))tab.classList.toggle("active",tab.dataset.view===id);}
+async function init(){
+  try{
+    DATA=await(await fetch("data/explorer.json")).json();
+    fillSelect("source",DATA.options.sources);fillSelect("task",DATA.options.tasks);fillSelect("setting",DATA.options.settings);fillSelect("format",DATA.options.formats);fillSelect("evaluation",DATA.options.evaluation_states,stateLabel);fillSelect("category",DATA.options.categories);fillSelect("chapter",DATA.options.chapters);fillSelect("role",DATA.options.roles);
+    const params=new URLSearchParams(window.location.search);ITEM_FILTER=params.get("item")||"";$("query").value=params.get("q")||"";
+    for(const id of ["source","task","setting","format","evaluation","category","chapter","role"]){const selectedValues=new Set((params.get(id)||"").split(",").filter(Boolean));for(const option of $(id).options)option.selected=selectedValues.has(option.value);}
+    renderEvidence();renderCatalog();filterData();
+    requestAnimationFrame(()=>{if(params.get("expand")==="answers")document.querySelector("#table tbody tr:first-child td:nth-child(6) details")?.setAttribute("open","");if(params.get("expand")==="question")document.querySelector("#table tbody tr:first-child td:nth-child(4) details")?.setAttribute("open","");if(params.get("focus")==="results")$("table").scrollIntoView({block:"start"});});
+  }catch(error){$("summary").textContent="The explorer data could not be loaded.";$("table").textContent=error.message;}
 }
-
-$("apply").addEventListener("click", filterData);
-$("query").addEventListener("keydown", e => { if (e.key === "Enter") filterData(); });
-$("clear").addEventListener("click", () => {
-  $("query").value = "";
-  for (const id of ["source","category","chapter","role"]) for (const option of $(id).options) option.selected = false;
-  filterData();
-});
-$("download").addEventListener("click", downloadCsv);
-init();
+for(const tab of document.querySelectorAll(".tab"))tab.addEventListener("click",()=>switchView(tab.dataset.view));
+$("apply").addEventListener("click",filterData);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")filterData();});
+$("clear").addEventListener("click",()=>{$("query").value="";for(const id of ["source","task","setting","format","evaluation","category","chapter","role"])for(const option of $(id).options)option.selected=false;ITEM_FILTER="";filterData();});
+$("download").addEventListener("click",downloadCsv);init();
 </script>
-</body>
-</html>
+</body></html>
